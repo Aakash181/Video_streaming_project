@@ -1,3 +1,4 @@
+#add all the file here which you dont want to track 
 video-storage/node_modules/
 video-storage/package-lock.json
 video-streaming/node_modules/
