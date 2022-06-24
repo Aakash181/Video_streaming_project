@@ -4,7 +4,6 @@ const fs = require("fs");
 const mongodb = require("mongodb");
 const app = express();
 
-//my name is aakash
 // Throws an error if the any required environment variables are missing.
 
 if (!process.env.PORT) {
