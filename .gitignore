@@ -1,0 +1,14 @@
+video-storage/node_modules/
+video-storage/package-lock.json
+video-streaming/node_modules/
+video-streaming/package-lock.json
+history/node_modules/
+history/package-lock.json
+
+video-storage/list_bucket.js
+video-storage/streem.js
+.env
+script/
+frontend/node_modules/
+frontend/package-lock.json
+flixtube-frontend
