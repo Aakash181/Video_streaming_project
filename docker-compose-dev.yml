@@ -1,0 +1,70 @@
+version: '3'
+services:
+
+  db:
+    image: mongo:latest
+    container_name: db
+    
+    ports:
+     - "4000:27017"
+    restart: always
+
+  video-storage:
+    image: video-storage-dev
+    build: 
+      context: ./video-storage
+      dockerfile: Dockerfile-dev
+    container_name: video-storage-dev
+    volumes:
+      - /tmp/video-storage/npm-cache:/root/.npm:z
+      - ./video-storage/src:/usr/src/app/src:z
+    ports:
+     - "4001:80"
+    environment:
+      - PORT=80
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} #replace with this varible with your aws access key
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} #replace with this varible with you aws secret access key
+      - NODE_ENV=development
+
+    restart: "no"
+
+
+  video-streaming:
+    image: video-streaming-dev
+    build: 
+      context: ./video-streaming
+      dockerfile: Dockerfile-dev
+    container_name: video-streaming-dev
+    volumes:
+      - /tmp/video-streaming/npm-cache:/root/.npm:z
+      - ./video-streaming/src:/usr/src/app/src:z
+    ports:
+     - "4002:80"
+    environment:
+      - PORT=80
+      - DBHOST=mongodb://db:27017
+      - DBNAME=video-streaming
+      - VIDEO_STORAGE_HOST=video-storage
+      - VIDEO_STORAGE_PORT=80
+      - NODE_ENV=development
+    depends_on:
+      - db
+    restart: "no"
+
+  history:
+    image: history-dev
+    build: 
+      context: ./history
+      dockerfile: Dockerfile-dev
+    container_name: history-dev
+    volumes:
+      - /tmp/history/npm-cache:/root/.npm:z
+      - ./history/src:/usr/src/app/src:z
+    ports:
+      - "4003:80"
+    environment:
+      - PORT=80
+      - NODE_ENV=development
+      - DBHOST=mongodb://db:27017
+      - DBNAME=video-streaming
+    restart: "no"
